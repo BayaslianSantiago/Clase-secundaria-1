@@ -19,8 +19,18 @@ st.markdown("""
     /* Titulos en azul brillante (celeste) para resaltar en oscuro */
     h1, h2, h3 { color: #4DA8DA !important; font-family: 'Segoe UI', Tahoma, sans-serif; }
     
-    /* Botones naranjas Innova */
-    .stButton>button { background-color: #F39200; color: white !important; font-weight: bold; border-radius: 8px; border: none; padding: 10px 24px; transition: all 0.3s ease; }
+    /* Botones naranjas Innova - CORREGIDO EL TEXTO APILADO */
+    .stButton>button { 
+        background-color: #F39200; 
+        color: white !important; 
+        font-weight: bold; 
+        border-radius: 8px; 
+        border: none; 
+        padding: 10px 24px; 
+        transition: all 0.3s ease;
+        white-space: nowrap; /* Esto evita que el texto se parta en varias lineas */
+        min-width: 140px; /* Asegura un ancho minimo para el boton */
+    }
     .stButton>button:hover { background-color: #D68000; color: white !important; border: 1px solid #FFF; }
     
     /* Pestañas */
@@ -99,7 +109,6 @@ elif slide_activa == "2. El Equipo":
                         "Interes": interes
                     })
                     st.success(f"¡Dato de {nombre_alumno} registrado!")
-                    st.balloons()
                 else:
                     st.warning("Por favor, ingresa al menos el nombre.")
     
@@ -187,7 +196,8 @@ elif slide_activa == "6. La Revelacion":
 
 # --- CONTROLES DE NAVEGACION ---
 st.markdown("---")
-col_ant, col_espacio, col_sig = st.columns([1, 8, 1])
+# Aca le dimos mas espacio a las columnas laterales (2 en vez de 1) para que el boton entre comodo
+col_ant, col_espacio, col_sig = st.columns([2, 6, 2])
 
 with col_ant:
     if st.session_state.slide_actual > 0:
@@ -196,3 +206,4 @@ with col_ant:
 with col_sig:
     if st.session_state.slide_actual < len(diapositivas) - 1:
         st.button("Siguiente", on_click=cambiar_slide, args=("siguiente",))
+        
