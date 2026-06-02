@@ -1,118 +1,193 @@
 import streamlit as st
 
-# Configuración inicial de la página
-st.set_page_config(page_title="Clase 1 - Programacion", layout="wide")
+# Configuración de la página
+st.set_page_config(page_title="Clase 1 - Programación", layout="wide", initial_sidebar_state="collapsed")
 
-# Menú lateral de navegación
-st.sidebar.title("Navegacion")
-seccion = st.sidebar.radio("Ir a:", [
-    "1. Presentacion", 
-    "2. El Equipo", 
-    "3. Repaso: Pensamiento Logico",
-    "4. Repaso: Codigo en Python", 
-    "5. La Revelacion"
-])
+# Estilos CSS personalizados (Identidad visual del colegio Innova)
+st.markdown("""
+    <style>
+    /* Fondo general más limpio */
+    .stApp {
+        background-color: #F4F6F9;
+    }
+    /* Color azul principal para títulos */
+    h1, h2, h3 {
+        color: #007BC0 !important; 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    /* Color naranja para los botones */
+    .stButton>button {
+        background-color: #F39200;
+        color: white;
+        font-weight: bold;
+        border-radius: 8px;
+        border: none;
+        padding: 10px 24px;
+        transition: all 0.3s ease;
+    }
+    .stButton>button:hover {
+        background-color: #D68000;
+        color: white;
+    }
+    /* Cajas de información con bordes y sombras sutiles */
+    .css-1r6slb0, .css-12oz5g7 {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.05);
+        border-left: 5px solid #90C226; /* Detalle verde institucional */
+    }
+    /* Estilizar las pestañas */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 24px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        height: 50px;
+        white-space: pre-wrap;
+        background-color: transparent;
+        border-radius: 4px 4px 0px 0px;
+        gap: 1px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #e6f3fa;
+        border-bottom: 3px solid #007BC0;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-# --- SECCION 1: PRESENTACION ---
-if seccion == "1. Presentacion":
-    st.title("Hola Mundo")
-    st.subheader("Bienvenidos a Programacion")
+# Manejo de estado para la navegación tipo diapositivas
+if 'slide_actual' not in st.session_state:
+    st.session_state.slide_actual = 0
+
+diapositivas = [
+    "1. Presentación",
+    "2. El Equipo",
+    "3. Repaso Lógico",
+    "4. Repaso Python",
+    "5. La Revelación"
+]
+
+def cambiar_slide(direccion):
+    if direccion == "siguiente" and st.session_state.slide_actual < len(diapositivas) - 1:
+        st.session_state.slide_actual += 1
+    elif direccion == "anterior" and st.session_state.slide_actual > 0:
+        st.session_state.slide_actual -= 1
+
+slide_activa = diapositivas[st.session_state.slide_actual]
+
+# --- CONTENIDO DE LAS DIAPOSITIVAS ---
+
+if slide_activa == "1. Presentación":
+    st.title("¡Hola Mundo! 💻")
+    st.markdown("---")
     
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([2, 1])
     with col1:
         st.markdown("""
-        ### Quien soy
-        * **Santiago Bayaslian**
-        * Estudiante de Ciencia de Datos e Inteligencia Artificial.
-        * Fundador de **Saian**, una agencia de software donde desarrollamos soluciones reales para empresas.
-        * Apasionado por la resolucion logica de problemas y el entrenamiento de la disciplina.
+        ### Santiago Bayaslian
+        * **Estudiante** avanzado en Ciencia de Datos e Inteligencia Artificial.
+        * **Fundador de Saian**: Agencia de software donde desarrollamos soluciones y sistemas reales para empresas.
+        * **Objetivo principal:** Transformarlos de simples consumidores de aplicaciones a creadores de su propia tecnología.
         """)
     with col2:
-        st.info("Mi objetivo en esta materia: Que pasen de ser simples consumidores de tecnologia a ser creadores de sus propias herramientas.")
+        st.info("La programación no es memorizar código, es aprender a pensar con lógica y resolver problemas de forma eficiente.")
 
-# --- SECCION 2: USTEDES ---
-elif seccion == "2. El Equipo":
-    st.title("Conociendo al equipo")
-    st.write("Vamos a inicializar nuestra base de datos en vivo.")
+elif slide_activa == "2. El Equipo":
+    st.title("Inicializando la base de datos...")
+    st.markdown("---")
+    
+    st.write("Vamos a guardar información en tiempo real.")
     
     with st.form("form_intereses"):
-        juego_favorito = st.text_input("Que aplicacion o videojuego utilizan con mayor frecuencia?")
-        tema_dificil = st.text_input("Cual fue el concepto mas complejo que vieron hasta el momento?")
-        submit = st.form_submit_button("Registrar Datos")
+        juego_favorito = st.text_input("¿Qué aplicación o videojuego utilizan con mayor frecuencia en el aula?")
+        tema_dificil = st.text_input("¿Cuál fue el concepto más complejo que aprendieron hasta hoy?")
+        submit = st.form_submit_button("Registrar Datos en el Servidor")
         
         if submit:
-            st.success(f"Registro exitoso. La aplicacion mas utilizada reportada es: {juego_favorito}.")
+            st.success(f"¡Registro exitoso! La aplicación más utilizada es: **{juego_favorito}**.")
 
-# --- SECCION 3: REPASO - PENSAMIENTO LOGICO ---
-elif seccion == "3. Repaso: Pensamiento Logico":
-    st.title("Repaso: La base de todo programa")
-    st.write("Antes de escribir codigo, aprendieron a estructurar el pensamiento. La maquina solo hace lo que le ordenamos mediante instrucciones precisas.")
+elif slide_activa == "3. Repaso Lógico":
+    st.title("Repaso: La base lógica")
+    st.markdown("---")
     
     col1, col2 = st.columns(2)
     
     with col1:
-        st.subheader("Algoritmos sin computadora")
+        st.subheader("Algoritmos Desconectados")
         st.markdown("""
-        Recordemos la actividad de dibujar a ciegas:
-        * Tuvieron que escribir secuencias de instrucciones en texto para que otro compañero dibuje figuras geometricas.
-        * Comprendieron que si la instruccion no es exacta, el resultado falla. Asi funciona exactamente una computadora.
+        **La actividad de dibujar a ciegas:**
+        * Escribieron instrucciones en texto para que un compañero dibujara figuras.
+        * Comprendieron que la máquina necesita órdenes precisas. Si la instrucción no es exacta, el programa falla.
         """)
         
     with col2:
         st.subheader("Diagramas de Flujo")
         st.markdown("""
-        Aprendieron a mapear procesos paso a paso:
-        * **Inicio / Fin:** El ovalo que delimita el programa.
-        * **Entrada / Salida:** El paralelogramo para leer o mostrar datos.
-        * **Proceso:** El rectangulo para las acciones.
-        * **Decision:** El rombo para evaluar condiciones (Si/No).
+        **Mapeo de procesos:**
+        * 🔵 **Óvalo:** Inicio / Fin del programa.
+        * 🟦 **Rectángulo:** Proceso o acción.
+        * 🔷 **Rombo:** Decisión lógica (Sí/No).
+        * ▱ **Paralelogramo:** Entrada o Salida de datos.
         """)
 
-# --- SECCION 4: REPASO - CODIGO EN PYTHON ---
-elif seccion == "4. Repaso: Codigo en Python":
-    st.title("Repaso: De Scratch a Python")
-    st.write("Dieron el salto mas importante: pasar de los bloques visuales a escribir instrucciones con texto en Google Colab.")
+elif slide_activa == "4. Repaso Python":
+    st.title("El Salto: De Scratch a Python")
+    st.markdown("---")
     
-    tab1, tab2, tab3 = st.tabs(["Variables e Interaccion", "Condicionales (if)", "Bucles (for)"])
+    st.write("Pasaron de unir bloques a escribir código real en Google Colab.")
+    
+    tab1, tab2, tab3 = st.tabs(["Variables y Entradas", "Condicionales (if)", "Bucles (for)"])
     
     with tab1:
-        st.subheader("Guardar y mostrar informacion")
         st.code("""
-        # Creamos una variable guardando lo que el usuario escribe
-        nombre = input("Como te llamas? ")
-        
-        # Mostramos el resultado en pantalla
-        print("Hola", nombre)
+# Pedir un dato y guardarlo en memoria
+nombre = input("¿Cómo te llamás? ")
+
+# Mostrar el resultado
+print("Hola", nombre)
         """, language="python")
         
     with tab2:
-        st.subheader("Toma de decisiones")
         st.code("""
-        puntos = 15
-        
-        # Evaluamos una condicion logica
-        if puntos > 10:
-            print("Ganaste")
-        else:
-            print("Sigue intentando")
+# Toma de decisiones lógicas
+puntos = 15
+
+if puntos > 10:
+    print("¡Ganaste la partida!")
+else:
+    print("Sigue intentando")
         """, language="python")
 
     with tab3:
-        st.subheader("Repeticion de tareas")
         st.code("""
-        # Repetimos una accion una cantidad especifica de veces
-        for i in range(5):
-            print("Hola")
+# Automatizar tareas repetitivas
+for i in range(5):
+    print("Esta instrucción se repite cinco veces")
         """, language="python")
 
-# --- SECCION 5: LA REVELACION ---
-elif seccion == "5. La Revelacion":
-    st.title("Arquitectura del software")
-    st.subheader("En que plataforma creen que esta construida esta presentacion?")
+elif slide_activa == "5. La Revelación":
+    st.title("Arquitectura del Software")
+    st.markdown("---")
     
-    mostrar_secreto = st.button("Ejecutar diagnostico")
+    st.subheader("¿Con qué programa creen que estoy proyectando esto?")
+    
+    mostrar_secreto = st.button("Ejecutar diagnóstico del sistema")
     
     if mostrar_secreto:
-        st.error("ESTO NO ES UN ARCHIVO DE POWERPOINT.")
-        st.success("Estan navegando en una aplicacion web interactiva escrita 100% en Python usando el framework Streamlit.")
-        st.markdown("### El objetivo final del curso es que ustedes construyan sus propios dashboards interactivos conectando la logica de programacion con el analisis de datos reales.")
+        st.error("ESTO NO ES POWERPOINT.")
+        st.success("Están interactuando con una aplicación web escrita 100% en Python usando la librería Streamlit.")
+        st.markdown("### El objetivo del año es que construyan sistemas reales como este.")
+
+# --- CONTROLES DE NAVEGACIÓN (Botones Inferiores) ---
+st.markdown("---")
+col_ant, col_espacio, col_sig = st.columns([1, 8, 1])
+
+with col_ant:
+    if st.session_state.slide_actual > 0:
+        st.button("Anterior", on_click=cambiar_slide, args=("anterior",))
+
+with col_sig:
+    if st.session_state.slide_actual < len(diapositivas) - 1:
+        st.button("Siguiente", on_click=cambiar_slide, args=("siguiente",))
